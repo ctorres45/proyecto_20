@@ -6,80 +6,83 @@
     <title>CRUD DynamoDB</title>
 
     <style>
-
         body{
             font-family: Arial;
-            background: #f4f4f4;
-            padding: 40px;
-        }
-
-        .container{
-            width: 500px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
+            margin:40px;
         }
 
         input{
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
+            padding:10px;
+            margin:5px;
         }
 
         button{
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            border: none;
-            background: #007bff;
-            color: white;
-            cursor: pointer;
-        }
-
-        button:hover{
-            background: #0056b3;
+            padding:10px;
+            cursor:pointer;
         }
 
         .producto{
-            background: #eee;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 5px;
+            border:1px solid #ccc;
+            padding:10px;
+            margin-top:10px;
         }
-
     </style>
-
 </head>
 <body>
 
-    <div class="container">
+    <h1>CRUD DynamoDB</h1>
 
-        <h1>CRUD DynamoDB</h1>
+    <input type="text" id="id" placeholder="ID">
+    <input type="text" id="nombre" placeholder="Nombre">
+    <input type="number" id="precio" placeholder="Precio">
 
-        <input type="text" id="id" placeholder="ID">
-        <input type="text" id="nombre" placeholder="Nombre">
-        <input type="number" id="precio" placeholder="Precio">
+    <button onclick="crearProducto()">
+        Crear Producto
+    </button>
 
-        <button onclick="crearProducto()">Crear Producto</button>
+    <h2>Productos</h2>
 
-        <h2>Productos</h2>
-
-        <div id="productos"></div>
-
-    </div>
+    <div id="listaProductos"></div>
 
 <script>
 
-async function crearProducto(){
+const API = '';
+
+async function obtenerProductos() {
+
+    const respuesta = await fetch(`${API}/productos`);
+
+    const productos = await respuesta.json();
+
+    const lista = document.getElementById('listaProductos');
+
+    lista.innerHTML = '';
+
+    productos.forEach(producto => {
+
+        lista.innerHTML += `
+            <div class="producto">
+                <p><strong>ID:</strong> ${producto.id}</p>
+                <p><strong>Nombre:</strong> ${producto.nombre}</p>
+                <p><strong>Precio:</strong> ${producto.precio}</p>
+
+                <button onclick="eliminarProducto('${producto.id}')">
+                    Eliminar
+                </button>
+            </div>
+        `;
+    });
+}
+
+async function crearProducto() {
 
     const id = document.getElementById('id').value;
     const nombre = document.getElementById('nombre').value;
     const precio = document.getElementById('precio').value;
 
-    await fetch('http://localhost:3000/productos', {
+    const respuesta = await fetch(`${API}/productos`, {
 
-        method: 'POST',
+        method:'POST',
 
         headers:{
             'Content-Type':'application/json'
@@ -90,38 +93,22 @@ async function crearProducto(){
             nombre,
             precio
         })
-
     });
+
+    const data = await respuesta.json();
+
+    alert(data.mensaje);
 
     obtenerProductos();
 }
 
+async function eliminarProducto(id) {
 
-async function obtenerProductos(){
-
-    const respuesta = await fetch('http://localhost:3000/productos');
-
-    const data = await respuesta.json();
-
-    const contenedor = document.getElementById('productos');
-
-    contenedor.innerHTML = '';
-
-    data.forEach(producto => {
-
-        contenedor.innerHTML += `
-        
-        <div class="producto">
-
-            <p><b>ID:</b> ${producto.id}</p>
-            <p><b>Nombre:</b> ${producto.nombre}</p>
-            <p><b>Precio:</b> ${producto.precio}</p>
-
-        </div>
-        
-        `;
+    await fetch(`${API}/productos/${id}`, {
+        method:'DELETE'
     });
 
+    obtenerProductos();
 }
 
 obtenerProductos();
