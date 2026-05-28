@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD DynamoDB</title>
+
+    <style>
+
+        body{
+            font-family: Arial;
+            background: #f4f4f4;
+            padding: 40px;
+        }
+
+        .container{
+            width: 500px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        input{
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        button{
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover{
+            background: #0056b3;
+        }
+
+        .producto{
+            background: #eee;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>CRUD DynamoDB</h1>
+
+        <input type="text" id="id" placeholder="ID">
+        <input type="text" id="nombre" placeholder="Nombre">
+        <input type="number" id="precio" placeholder="Precio">
+
+        <button onclick="crearProducto()">Crear Producto</button>
+
+        <h2>Productos</h2>
+
+        <div id="productos"></div>
+
+    </div>
+
+<script>
+
+async function crearProducto(){
+
+    const id = document.getElementById('id').value;
+    const nombre = document.getElementById('nombre').value;
+    const precio = document.getElementById('precio').value;
+
+    await fetch('http://localhost:3000/productos', {
+
+        method: 'POST',
+
+        headers:{
+            'Content-Type':'application/json'
+        },
+
+        body: JSON.stringify({
+            id,
+            nombre,
+            precio
+        })
+
+    });
+
+    obtenerProductos();
+}
+
+
+async function obtenerProductos(){
+
+    const respuesta = await fetch('http://localhost:3000/productos');
+
+    const data = await respuesta.json();
+
+    const contenedor = document.getElementById('productos');
+
+    contenedor.innerHTML = '';
+
+    data.forEach(producto => {
+
+        contenedor.innerHTML += `
+        
+        <div class="producto">
+
+            <p><b>ID:</b> ${producto.id}</p>
+            <p><b>Nombre:</b> ${producto.nombre}</p>
+            <p><b>Precio:</b> ${producto.precio}</p>
+
+        </div>
+        
+        `;
+    });
+
+}
+
+obtenerProductos();
+
+</script>
+
+</body>
+</html>

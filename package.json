@@ -1,0 +1,16 @@
+{
+  "name": "crud-dynamodb",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error no test\" && exit 1"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1693.0",
+    "body-parser": "^2.2.2",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
+  }
+}
