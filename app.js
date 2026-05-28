@@ -167,6 +167,10 @@ app.delete('/productos/:id', async (req, res) => {
 // ==========================
 const PORT = process.env.PORT || 3000;
 
+console.log("AWS_ACCESS_KEY_ID:", process.env.AWS_ACCESS_KEY_ID);
+console.log("AWS_SECRET_ACCESS_KEY:", process.env.AWS_SECRET_ACCESS_KEY ? "EXISTE" : "NO EXISTE");
+console.log("AWS_REGION:", process.env.AWS_REGION);
+
 app.listen(PORT, () => {
     console.log(`Servidor funcionando en puerto ${PORT}`);
 });
